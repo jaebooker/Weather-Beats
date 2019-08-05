@@ -27,7 +27,8 @@ class ViewController: UIViewController {
         }
         print(lat)
         print(longi)
-        guard let url = URL(string: "api.openweathermap.org/data/2.5/weather?lat=" + String(lat) + "&lon=" + String(longi) + "&APPID=" + apiKey) else { return }
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?lat=" + String(lat) + "&lon=" + String(longi) + "&APPID=" + apiKey) else { return }
+        print(url)
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, _, _) in
             guard let data = data else { return }

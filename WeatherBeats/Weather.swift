@@ -45,18 +45,18 @@ struct Main: Decodable {
 }
 
 struct Wind: Decodable {
-    var speed: Float
-    var deg: Float
+    var speed: Double
+    var deg: Double
 }
 
 struct Clouds: Decodable {
-    
+    var all: Int
 }
 
 struct Sys: Decodable {
     var type: Int
     var id: Int
-    var message: Float
+    var message: Double
     var country: String
     var sunrise: Int
     var sunset: Int
