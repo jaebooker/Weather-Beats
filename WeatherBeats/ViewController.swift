@@ -10,6 +10,8 @@ import UIKit
 import CoreLocation
 
 class ViewController: UIViewController {
+    @IBOutlet weak var backgroundImage: UIImageView!
+    var weatherData: [Weather] = []
     var apiKey: String = ""
     var lat: Double = 0
     var longi: Double = 0
@@ -18,32 +20,29 @@ class ViewController: UIViewController {
     }
     @IBAction func sadButtonPressed(_ sender: Any) {
     }
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidLoad() {
         if locationManager.location?.coordinate != nil {
             lat = (locationManager.location?.coordinate.latitude)!
             longi = (locationManager.location?.coordinate.longitude)!
-            print(lat)
-            print(longi)
         }
-        print(lat)
-        print(longi)
         guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?lat=" + String(lat) + "&lon=" + String(longi) + "&APPID=" + apiKey) else { return }
         print(url)
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, _, _) in
             guard let data = data else { return }
             do {
-                let apiEvents = try JSONDecoder().decode(Weather.self, from: data)
-                print(apiEvents)
+                let apiEvent = try JSONDecoder().decode(Weather.self, from: data)
+                self.weatherData.append(apiEvent)
             } catch { }
+            DispatchQueue.main.async {
+                if self.weatherData[0].weather[0].main == "Clouds" {
+                    self.backgroundImage.image = UIImage(named: "cloudy")
+                }
+            }
         }
         task.resume()
-    }
-    override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
-
 }
 

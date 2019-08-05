@@ -18,6 +18,10 @@
 		0D2A5A9622F51612008E3390 /* WeatherBeatsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2A5A9522F51612008E3390 /* WeatherBeatsUITests.swift */; };
 		0D568FC322F7CBEE009090A7 /* happyoji.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0D568FC222F7CBEE009090A7 /* happyoji.jpg */; };
 		0D568FC522F7CBFA009090A7 /* sadmoji.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 0D568FC422F7CBF9009090A7 /* sadmoji.jpeg */; };
+		0DBCC59622F8DE6F0080DE78 /* cloudy.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59522F8DE6E0080DE78 /* cloudy.jpg */; };
+		0DBCC59822F8DE7C0080DE78 /* storm.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59722F8DE7C0080DE78 /* storm.jpg */; };
+		0DBCC59A22F8DE840080DE78 /* sunny.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59922F8DE840080DE78 /* sunny.jpg */; };
+		0DBCC59C22F8DE8D0080DE78 /* rain.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,10 @@
 		0D2A5A9722F51612008E3390 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0D568FC222F7CBEE009090A7 /* happyoji.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = happyoji.jpg; sourceTree = "<group>"; };
 		0D568FC422F7CBF9009090A7 /* sadmoji.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sadmoji.jpeg; sourceTree = "<group>"; };
+		0DBCC59522F8DE6E0080DE78 /* cloudy.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cloudy.jpg; sourceTree = "<group>"; };
+		0DBCC59722F8DE7C0080DE78 /* storm.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = storm.jpg; sourceTree = "<group>"; };
+		0DBCC59922F8DE840080DE78 /* sunny.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sunny.jpg; sourceTree = "<group>"; };
+		0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = rain.jpeg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +115,10 @@
 			children = (
 				0D568FC222F7CBEE009090A7 /* happyoji.jpg */,
 				0D568FC422F7CBF9009090A7 /* sadmoji.jpeg */,
+				0DBCC59522F8DE6E0080DE78 /* cloudy.jpg */,
+				0DBCC59722F8DE7C0080DE78 /* storm.jpg */,
+				0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */,
+				0DBCC59922F8DE840080DE78 /* sunny.jpg */,
 				0D2A5A7322F5160F008E3390 /* AppDelegate.swift */,
 				0D2A5A7522F5160F008E3390 /* SceneDelegate.swift */,
 				0D2A5A7722F5160F008E3390 /* ViewController.swift */,
@@ -242,10 +254,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D2A5A8022F51611008E3390 /* LaunchScreen.storyboard in Resources */,
+				0DBCC59C22F8DE8D0080DE78 /* rain.jpeg in Resources */,
 				0D2A5A7D22F51611008E3390 /* Assets.xcassets in Resources */,
 				0D568FC522F7CBFA009090A7 /* sadmoji.jpeg in Resources */,
+				0DBCC59622F8DE6F0080DE78 /* cloudy.jpg in Resources */,
 				0D2A5A7B22F5160F008E3390 /* Main.storyboard in Resources */,
+				0DBCC59A22F8DE840080DE78 /* sunny.jpg in Resources */,
 				0D568FC322F7CBEE009090A7 /* happyoji.jpg in Resources */,
+				0DBCC59822F8DE7C0080DE78 /* storm.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
