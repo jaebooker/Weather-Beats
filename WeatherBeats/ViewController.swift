@@ -38,6 +38,15 @@ class ViewController: UIViewController {
                 if self.weatherData[0].weather[0].main == "Clouds" {
                     self.backgroundImage.image = UIImage(named: "cloudy")
                 }
+                if self.weatherData[0].weather[0].main == "Rain" {
+                    self.backgroundImage.image = UIImage(named: "rain")
+                }
+                if self.weatherData[0].weather[0].main == "Sunny" {
+                    self.backgroundImage.image = UIImage(named: "sunny")
+                }
+                if self.weatherData[0].weather[0].main == "Thunderstorms" {
+                    self.backgroundImage.image = UIImage(named: "storm")
+                }
             }
         }
         task.resume()
