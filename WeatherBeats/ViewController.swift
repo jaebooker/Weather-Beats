@@ -8,17 +8,21 @@
 
 import UIKit
 import CoreLocation
+import AVFoundation
 
 class ViewController: UIViewController {
     @IBOutlet weak var backgroundImage: UIImageView!
+    var backgroundMusicPlayer = AVAudioPlayer()
     var weatherData: [Weather] = []
     var apiKey: String = ""
     var lat: Double = 0
     var longi: Double = 0
     var locationManager = CLLocationManager()
     @IBAction func happyButtonPressed(_ sender: Any) {
+        checkHappy()
     }
     @IBAction func sadButtonPressed(_ sender: Any) {
+        checkSad()
     }
     override func viewDidLoad() {
         if locationManager.location?.coordinate != nil {
@@ -52,6 +56,90 @@ class ViewController: UIViewController {
         task.resume()
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+    }
+    func checkSad(){
+        if self.weatherData[0].weather[0].main == "Rain" {
+            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+        if self.weatherData[0].weather[0].main == "Clouds" {
+            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+        if self.weatherData[0].weather[0].main == "Thunderstorms" {
+            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+        if self.weatherData[0].weather[0].main == "Sunny" {
+            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+    }
+    func checkHappy(){
+        if self.weatherData[0].weather[0].main == "Rain" {
+            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+        if self.weatherData[0].weather[0].main == "Clouds" {
+            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+        if self.weatherData[0].weather[0].main == "Thunderstorms" {
+            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+        if self.weatherData[0].weather[0].main == "Sunny" {
+            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
     }
 }
 

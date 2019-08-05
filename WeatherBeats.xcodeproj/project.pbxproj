@@ -22,6 +22,7 @@
 		0DBCC59822F8DE7C0080DE78 /* storm.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59722F8DE7C0080DE78 /* storm.jpg */; };
 		0DBCC59A22F8DE840080DE78 /* sunny.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59922F8DE840080DE78 /* sunny.jpg */; };
 		0DBCC59C22F8DE8D0080DE78 /* rain.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */; };
+		0DBCC59E22F8EE1D0080DE78 /* sadRain.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59D22F8EE1D0080DE78 /* sadRain.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		0DBCC59722F8DE7C0080DE78 /* storm.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = storm.jpg; sourceTree = "<group>"; };
 		0DBCC59922F8DE840080DE78 /* sunny.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sunny.jpg; sourceTree = "<group>"; };
 		0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = rain.jpeg; sourceTree = "<group>"; };
+		0DBCC59D22F8EE1D0080DE78 /* sadRain.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sadRain.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				0D568FC222F7CBEE009090A7 /* happyoji.jpg */,
 				0D568FC422F7CBF9009090A7 /* sadmoji.jpeg */,
 				0DBCC59522F8DE6E0080DE78 /* cloudy.jpg */,
+				0DBCC59D22F8EE1D0080DE78 /* sadRain.mp3 */,
 				0DBCC59722F8DE7C0080DE78 /* storm.jpg */,
 				0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */,
 				0DBCC59922F8DE840080DE78 /* sunny.jpg */,
@@ -262,6 +265,7 @@
 				0DBCC59A22F8DE840080DE78 /* sunny.jpg in Resources */,
 				0D568FC322F7CBEE009090A7 /* happyoji.jpg in Resources */,
 				0DBCC59822F8DE7C0080DE78 /* storm.jpg in Resources */,
+				0DBCC59E22F8EE1D0080DE78 /* sadRain.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
