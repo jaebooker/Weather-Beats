@@ -25,18 +25,26 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="5Wi-1g-0qO">
-                                <rect key="frame" x="40" y="398" width="334" height="22"/>
+                                <rect key="frame" x="40" y="370" width="334" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqC-PG-Mz2">
-                                        <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
-                                        <state key="normal" image="smiley" catalog="system"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="2tl-QO-ZTg"/>
+                                            <constraint firstAttribute="height" constant="50" id="eFR-2Q-IFv"/>
+                                        </constraints>
+                                        <state key="normal" image="happyoji.jpg"/>
                                         <connections>
                                             <action selector="happyButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FSN-BY-hRu"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fo5-as-yRg">
-                                        <rect key="frame" x="314" y="0.0" width="20" height="22"/>
-                                        <state key="normal" image="smiley" catalog="system"/>
+                                        <rect key="frame" x="284" y="0.0" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="oam-oE-9bE"/>
+                                            <constraint firstAttribute="width" constant="50" id="pk7-7x-d9A"/>
+                                        </constraints>
+                                        <state key="normal" image="sadmoji.jpeg"/>
                                         <connections>
                                             <action selector="sadButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="94p-SA-Ouz"/>
                                         </connections>
@@ -46,6 +54,7 @@
                         </subviews>
                         <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="tn4-fk-5JB" firstAttribute="top" secondItem="5Wi-1g-0qO" secondAttribute="bottom" constant="-376" id="4YV-j0-J20"/>
                             <constraint firstItem="tn4-fk-5JB" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="AzU-06-YNp"/>
                             <constraint firstItem="tn4-fk-5JB" firstAttribute="top" secondItem="ZEG-jw-mkQ" secondAttribute="bottom" constant="-236" id="GTz-bw-G2b"/>
                             <constraint firstItem="ZEG-jw-mkQ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="GXl-mw-O4p"/>
@@ -53,7 +62,6 @@
                             <constraint firstItem="tn4-fk-5JB" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="WPx-aP-fd4"/>
                             <constraint firstItem="tn4-fk-5JB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Zcx-BE-7VP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZEG-jw-mkQ" secondAttribute="trailing" constant="40" id="hUz-Yk-FOc"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5Wi-1g-0qO" secondAttribute="bottom" constant="442" id="pMe-LD-9gk"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5Wi-1g-0qO" secondAttribute="trailing" constant="40" id="uHX-nD-zho"/>
                             <constraint firstItem="5Wi-1g-0qO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="v1u-F1-Df7"/>
                         </constraints>
@@ -66,6 +74,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="smiley" catalog="system" width="64" height="62"/>
+        <image name="happyoji.jpg" width="750" height="1000"/>
+        <image name="sadmoji.jpeg" width="225" height="225"/>
     </resources>
 </document>

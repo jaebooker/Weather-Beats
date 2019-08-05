@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 class ViewController: UIViewController {
-    var apiKey: Int = 0
+    var apiKey: String = ""
     var lat: Double = 0
     var longi: Double = 0
     var locationManager = CLLocationManager()
@@ -25,7 +25,9 @@ class ViewController: UIViewController {
             print(lat)
             print(longi)
         }
-        guard let url = URL(string: "api.openweathermap.org/data/2.5/weather?lat=" + String(lat) + "&lon=" + String(longi) + "&APPID=" + String(apiKey)) else { return }
+        print(lat)
+        print(longi)
+        guard let url = URL(string: "api.openweathermap.org/data/2.5/weather?lat=" + String(lat) + "&lon=" + String(longi) + "&APPID=" + apiKey) else { return }
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, _, _) in
             guard let data = data else { return }
