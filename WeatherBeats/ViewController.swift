@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     var backgroundMusicPlayer = AVAudioPlayer()
     var musicForMood = ""
     var weatherData: [Weather] = []
-    var apiKey: String = ""
+    var apiKey: String = "" //<---add your own token
     var lat: Double = 0
     var longi: Double = 0
     var locationManager = CLLocationManager()
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
                 self.weatherData.append(apiEvent)
             } catch { }
             DispatchQueue.main.async {
-                if self.weatherData[0].weather[0].main == "Clouds" {
+                if (self.weatherData[0].weather[0].main == "Clouds") ||  (self.weatherData[0].weather[0].main == "Mist") {
                     self.backgroundImage.image = UIImage(named: "cloudy")
                 }
                 if self.weatherData[0].weather[0].main == "Rain" {
@@ -71,8 +71,8 @@ class ViewController: UIViewController {
             }
             backgroundMusicPlayer.play()
         }
-        if self.weatherData[0].weather[0].main == "Clouds" {
-            musicForMood = Bundle.main.path(forResource: "sadClouds", ofType: "mp3")!
+        if (self.weatherData[0].weather[0].main == "Clouds") ||  (self.weatherData[0].weather[0].main == "Mist") {
+            musicForMood = Bundle.main.path(forResource: "sadCloud", ofType: "mp3")!
             do {
                 backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
@@ -123,8 +123,8 @@ class ViewController: UIViewController {
             }
             backgroundMusicPlayer.play()
         }
-        if self.weatherData[0].weather[0].main == "Clouds" {
-            musicForMood = Bundle.main.path(forResource: "happyClouds", ofType: "mp3")!
+        if (self.weatherData[0].weather[0].main == "Clouds") ||  (self.weatherData[0].weather[0].main == "Mist") {
+            musicForMood = Bundle.main.path(forResource: "happyCloud", ofType: "mp3")!
             do {
                 backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
