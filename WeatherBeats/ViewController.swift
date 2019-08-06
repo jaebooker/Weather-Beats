@@ -9,7 +9,6 @@
 import UIKit
 import CoreLocation
 import AVFoundation
-
 class ViewController: UIViewController {
     @IBOutlet weak var backgroundImage: UIImageView!
     var backgroundMusicPlayer = AVAudioPlayer()
@@ -49,7 +48,7 @@ class ViewController: UIViewController {
                 if self.weatherData[0].weather[0].main == "Clear" {
                     self.backgroundImage.image = UIImage(named: "sunny")
                 }
-                if self.weatherData[0].weather[0].main == "Thunderstorms" {
+                if self.weatherData[0].weather[0].main == "Extreme" {
                     self.backgroundImage.image = UIImage(named: "storm")
                 }
                 if self.weatherData[0].weather[0].main == "Snow" {
@@ -82,7 +81,7 @@ class ViewController: UIViewController {
             }
             backgroundMusicPlayer.play()
         }
-        if self.weatherData[0].weather[0].main == "Thunderstorms" {
+        if self.weatherData[0].weather[0].main == "Extreme" {
             musicForMood = Bundle.main.path(forResource: "sadThunder", ofType: "mp3")!
             do {
                 backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
@@ -134,7 +133,7 @@ class ViewController: UIViewController {
             }
             backgroundMusicPlayer.play()
         }
-        if self.weatherData[0].weather[0].main == "Thunderstorms" {
+        if self.weatherData[0].weather[0].main == "Extreme" {
             musicForMood = Bundle.main.path(forResource: "happyThunder", ofType: "mp3")!
             do {
                 backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
