@@ -23,6 +23,12 @@
 		0DBCC59A22F8DE840080DE78 /* sunny.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59922F8DE840080DE78 /* sunny.jpg */; };
 		0DBCC59C22F8DE8D0080DE78 /* rain.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */; };
 		0DBCC59E22F8EE1D0080DE78 /* sadRain.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59D22F8EE1D0080DE78 /* sadRain.mp3 */; };
+		0DBCC5A022F8F1F20080DE78 /* sadThunder.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC59F22F8F1F20080DE78 /* sadThunder.mp3 */; };
+		0DBCC5A222F8F8120080DE78 /* happyRain.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5A122F8F8120080DE78 /* happyRain.mp3 */; };
+		0DBCC5A422F8F8800080DE78 /* happyThunder.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5A322F8F8800080DE78 /* happyThunder.mp3 */; };
+		0DBCC5A622F8F9AB0080DE78 /* blizzard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5A522F8F9AB0080DE78 /* blizzard.jpg */; };
+		0DBCC5A822F8FA4C0080DE78 /* happySnow.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5A722F8FA4C0080DE78 /* happySnow.mp3 */; };
+		0DBCC5AA22F8FC660080DE78 /* happySun.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5A922F8FC660080DE78 /* happySun.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +71,12 @@
 		0DBCC59922F8DE840080DE78 /* sunny.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sunny.jpg; sourceTree = "<group>"; };
 		0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = rain.jpeg; sourceTree = "<group>"; };
 		0DBCC59D22F8EE1D0080DE78 /* sadRain.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sadRain.mp3; sourceTree = "<group>"; };
+		0DBCC59F22F8F1F20080DE78 /* sadThunder.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sadThunder.mp3; sourceTree = "<group>"; };
+		0DBCC5A122F8F8120080DE78 /* happyRain.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = happyRain.mp3; sourceTree = "<group>"; };
+		0DBCC5A322F8F8800080DE78 /* happyThunder.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = happyThunder.mp3; sourceTree = "<group>"; };
+		0DBCC5A522F8F9AB0080DE78 /* blizzard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blizzard.jpg; sourceTree = "<group>"; };
+		0DBCC5A722F8FA4C0080DE78 /* happySnow.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = happySnow.mp3; sourceTree = "<group>"; };
+		0DBCC5A922F8FC660080DE78 /* happySun.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = happySun.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,11 +129,17 @@
 			children = (
 				0D568FC222F7CBEE009090A7 /* happyoji.jpg */,
 				0D568FC422F7CBF9009090A7 /* sadmoji.jpeg */,
+				0DBCC59F22F8F1F20080DE78 /* sadThunder.mp3 */,
 				0DBCC59522F8DE6E0080DE78 /* cloudy.jpg */,
+				0DBCC5A522F8F9AB0080DE78 /* blizzard.jpg */,
+				0DBCC5A122F8F8120080DE78 /* happyRain.mp3 */,
 				0DBCC59D22F8EE1D0080DE78 /* sadRain.mp3 */,
+				0DBCC5A922F8FC660080DE78 /* happySun.mp3 */,
 				0DBCC59722F8DE7C0080DE78 /* storm.jpg */,
+				0DBCC5A722F8FA4C0080DE78 /* happySnow.mp3 */,
 				0DBCC59B22F8DE8D0080DE78 /* rain.jpeg */,
 				0DBCC59922F8DE840080DE78 /* sunny.jpg */,
+				0DBCC5A322F8F8800080DE78 /* happyThunder.mp3 */,
 				0D2A5A7322F5160F008E3390 /* AppDelegate.swift */,
 				0D2A5A7522F5160F008E3390 /* SceneDelegate.swift */,
 				0D2A5A7722F5160F008E3390 /* ViewController.swift */,
@@ -256,13 +274,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DBCC5A422F8F8800080DE78 /* happyThunder.mp3 in Resources */,
 				0D2A5A8022F51611008E3390 /* LaunchScreen.storyboard in Resources */,
 				0DBCC59C22F8DE8D0080DE78 /* rain.jpeg in Resources */,
+				0DBCC5A622F8F9AB0080DE78 /* blizzard.jpg in Resources */,
 				0D2A5A7D22F51611008E3390 /* Assets.xcassets in Resources */,
+				0DBCC5A822F8FA4C0080DE78 /* happySnow.mp3 in Resources */,
 				0D568FC522F7CBFA009090A7 /* sadmoji.jpeg in Resources */,
 				0DBCC59622F8DE6F0080DE78 /* cloudy.jpg in Resources */,
 				0D2A5A7B22F5160F008E3390 /* Main.storyboard in Resources */,
+				0DBCC5A222F8F8120080DE78 /* happyRain.mp3 in Resources */,
+				0DBCC5A022F8F1F20080DE78 /* sadThunder.mp3 in Resources */,
 				0DBCC59A22F8DE840080DE78 /* sunny.jpg in Resources */,
+				0DBCC5AA22F8FC660080DE78 /* happySun.mp3 in Resources */,
 				0D568FC322F7CBEE009090A7 /* happyoji.jpg in Resources */,
 				0DBCC59822F8DE7C0080DE78 /* storm.jpg in Resources */,
 				0DBCC59E22F8EE1D0080DE78 /* sadRain.mp3 in Resources */,

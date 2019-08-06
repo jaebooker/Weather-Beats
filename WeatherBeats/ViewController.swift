@@ -13,6 +13,7 @@ import AVFoundation
 class ViewController: UIViewController {
     @IBOutlet weak var backgroundImage: UIImageView!
     var backgroundMusicPlayer = AVAudioPlayer()
+    var musicForMood = ""
     var weatherData: [Weather] = []
     var apiKey: String = ""
     var lat: Double = 0
@@ -45,11 +46,14 @@ class ViewController: UIViewController {
                 if self.weatherData[0].weather[0].main == "Rain" {
                     self.backgroundImage.image = UIImage(named: "rain")
                 }
-                if self.weatherData[0].weather[0].main == "Sunny" {
+                if self.weatherData[0].weather[0].main == "Clear" {
                     self.backgroundImage.image = UIImage(named: "sunny")
                 }
                 if self.weatherData[0].weather[0].main == "Thunderstorms" {
                     self.backgroundImage.image = UIImage(named: "storm")
+                }
+                if self.weatherData[0].weather[0].main == "Snow" {
+                    self.backgroundImage.image = UIImage(named: "blizzard")
                 }
             }
         }
@@ -59,9 +63,9 @@ class ViewController: UIViewController {
     }
     func checkSad(){
         if self.weatherData[0].weather[0].main == "Rain" {
-            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")!
             do {
-                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
             catch {
                 print(error)
@@ -69,9 +73,9 @@ class ViewController: UIViewController {
             backgroundMusicPlayer.play()
         }
         if self.weatherData[0].weather[0].main == "Clouds" {
-            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            musicForMood = Bundle.main.path(forResource: "sadClouds", ofType: "mp3")!
             do {
-                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
             catch {
                 print(error)
@@ -79,19 +83,29 @@ class ViewController: UIViewController {
             backgroundMusicPlayer.play()
         }
         if self.weatherData[0].weather[0].main == "Thunderstorms" {
-            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            musicForMood = Bundle.main.path(forResource: "sadThunder", ofType: "mp3")!
             do {
-                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
             catch {
                 print(error)
             }
             backgroundMusicPlayer.play()
         }
-        if self.weatherData[0].weather[0].main == "Sunny" {
-            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+        if self.weatherData[0].weather[0].main == "Clear" {
+            musicForMood = Bundle.main.path(forResource: "sadSun", ofType: "mp3")!
             do {
-                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+        if self.weatherData[0].weather[0].main == "Snow" {
+            musicForMood = Bundle.main.path(forResource: "sadSnow", ofType: "mp3")!
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
             catch {
                 print(error)
@@ -101,9 +115,9 @@ class ViewController: UIViewController {
     }
     func checkHappy(){
         if self.weatherData[0].weather[0].main == "Rain" {
-            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            musicForMood = Bundle.main.path(forResource: "happyRain", ofType: "mp3")!
             do {
-                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
             catch {
                 print(error)
@@ -111,9 +125,9 @@ class ViewController: UIViewController {
             backgroundMusicPlayer.play()
         }
         if self.weatherData[0].weather[0].main == "Clouds" {
-            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            musicForMood = Bundle.main.path(forResource: "happyClouds", ofType: "mp3")!
             do {
-                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
             catch {
                 print(error)
@@ -121,19 +135,29 @@ class ViewController: UIViewController {
             backgroundMusicPlayer.play()
         }
         if self.weatherData[0].weather[0].main == "Thunderstorms" {
-            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+            musicForMood = Bundle.main.path(forResource: "happyThunder", ofType: "mp3")!
             do {
-                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
             catch {
                 print(error)
             }
             backgroundMusicPlayer.play()
         }
-        if self.weatherData[0].weather[0].main == "Sunny" {
-            let musicForMood = Bundle.main.path(forResource: "sadRain", ofType: "mp3")
+        if self.weatherData[0].weather[0].main == "Clear" {
+            musicForMood = Bundle.main.path(forResource: "happySun", ofType: "mp3")!
             do {
-                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood!))
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
+            }
+            catch {
+                print(error)
+            }
+            backgroundMusicPlayer.play()
+        }
+        if self.weatherData[0].weather[0].main == "Snow" {
+            musicForMood = Bundle.main.path(forResource: "happySnow", ofType: "mp3")!
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: musicForMood))
             }
             catch {
                 print(error)
