@@ -31,6 +31,8 @@
 		0DBCC5AA22F8FC660080DE78 /* happySun.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5A922F8FC660080DE78 /* happySun.mp3 */; };
 		0DBCC5AC22F959520080DE78 /* happyCloud.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5AB22F959520080DE78 /* happyCloud.mp3 */; };
 		0DBCC5AE22F959780080DE78 /* sadCloud.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5AD22F959780080DE78 /* sadCloud.mp3 */; };
+		0DBCC5B022F95F870080DE78 /* sadSun.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5AF22F95F870080DE78 /* sadSun.mp3 */; };
+		0DBCC5B222F95F8E0080DE78 /* sadSnow.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0DBCC5B122F95F8E0080DE78 /* sadSnow.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +83,8 @@
 		0DBCC5A922F8FC660080DE78 /* happySun.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = happySun.mp3; sourceTree = "<group>"; };
 		0DBCC5AB22F959520080DE78 /* happyCloud.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = happyCloud.mp3; sourceTree = "<group>"; };
 		0DBCC5AD22F959780080DE78 /* sadCloud.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sadCloud.mp3; sourceTree = "<group>"; };
+		0DBCC5AF22F95F870080DE78 /* sadSun.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sadSun.mp3; sourceTree = "<group>"; };
+		0DBCC5B122F95F8E0080DE78 /* sadSnow.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sadSnow.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,7 +141,9 @@
 				0DBCC59522F8DE6E0080DE78 /* cloudy.jpg */,
 				0DBCC5A522F8F9AB0080DE78 /* blizzard.jpg */,
 				0DBCC5AB22F959520080DE78 /* happyCloud.mp3 */,
+				0DBCC5B122F95F8E0080DE78 /* sadSnow.mp3 */,
 				0DBCC5AD22F959780080DE78 /* sadCloud.mp3 */,
+				0DBCC5AF22F95F870080DE78 /* sadSun.mp3 */,
 				0DBCC5A122F8F8120080DE78 /* happyRain.mp3 */,
 				0DBCC59D22F8EE1D0080DE78 /* sadRain.mp3 */,
 				0DBCC5A922F8FC660080DE78 /* happySun.mp3 */,
@@ -288,6 +294,7 @@
 				0DBCC5A822F8FA4C0080DE78 /* happySnow.mp3 in Resources */,
 				0D568FC522F7CBFA009090A7 /* sadmoji.jpeg in Resources */,
 				0DBCC5AC22F959520080DE78 /* happyCloud.mp3 in Resources */,
+				0DBCC5B022F95F870080DE78 /* sadSun.mp3 in Resources */,
 				0DBCC59622F8DE6F0080DE78 /* cloudy.jpg in Resources */,
 				0D2A5A7B22F5160F008E3390 /* Main.storyboard in Resources */,
 				0DBCC5A222F8F8120080DE78 /* happyRain.mp3 in Resources */,
@@ -295,6 +302,7 @@
 				0DBCC5AE22F959780080DE78 /* sadCloud.mp3 in Resources */,
 				0DBCC59A22F8DE840080DE78 /* sunny.jpg in Resources */,
 				0DBCC5AA22F8FC660080DE78 /* happySun.mp3 in Resources */,
+				0DBCC5B222F95F8E0080DE78 /* sadSnow.mp3 in Resources */,
 				0D568FC322F7CBEE009090A7 /* happyoji.jpg in Resources */,
 				0DBCC59822F8DE7C0080DE78 /* storm.jpg in Resources */,
 				0DBCC59E22F8EE1D0080DE78 /* sadRain.mp3 in Resources */,
