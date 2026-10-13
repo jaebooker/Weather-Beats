@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Weather Beats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a painted sky hero (canvas, horizon = live waveform) over a 5x2 weather-by-mood collection grid. */
+:root{
+  --bg:#eef1f4; --surface:#fbfcfd; --fg:#17202b; --muted:#5a6676; --line:#d4dae2;
+  --accent:#b45309; --accent-ink:#fff8ef;
+  --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141a; --surface:#161d26; --fg:#e5eaf0; --muted:#93a0b0; --line:#273240;
+  --accent:#f0a020; --accent-ink:#1a1206; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141a; --surface:#161d26; --fg:#e5eaf0; --muted:#93a0b0; --line:#273240;
+  --accent:#f0a020; --accent-ink:#1a1206; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- hero: painted sky ---------- */
+.hero{position:relative;overflow:hidden;min-height:34rem;color:var(--ink);
+  --ink:#f6f8fb; --chip:rgba(255,255,255,.14); --chip-on:rgba(255,255,255,.92); --chip-on-ink:#111820}
+.hero.light{--ink:#141b24; --chip:rgba(20,27,36,.09); --chip-on:rgba(20,27,36,.9); --chip-on-ink:#f6f8fb}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-in{position:relative;z-index:1;max-width:68rem;margin:0 auto;padding-inline:16px;padding-block:1.25rem 7.5rem;display:grid;gap:1.75rem}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:800;font-size:1.35rem;letter-spacing:.06em;text-transform:uppercase}
+.brand small{font-family:var(--mono);font-weight:400;font-size:.72rem;letter-spacing:.04em;opacity:.75;margin-left:.6rem;text-transform:none}
+.live{font-family:var(--mono);font-size:.78rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.live button{background:var(--chip);border:1px solid color-mix(in srgb,var(--ink) 25%,transparent);border-radius:999px;padding:.3rem .8rem;font-family:var(--mono);font-size:.76rem}
+.now{display:grid;gap:.35rem}
+.eyebrow{font-family:var(--mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.now h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(3.2rem,11vw,7.5rem);line-height:.88;letter-spacing:-.01em;text-transform:uppercase;text-wrap:balance}
+.meta{font-family:var(--mono);font-size:.85rem;font-variant-numeric:tabular-nums;opacity:.9}
+.controls{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center}
+.play{display:inline-flex;align-items:center;gap:.6rem;border:0;border-radius:999px;padding:.85rem 1.4rem .85rem 1.1rem;background:var(--chip-on);color:var(--chip-on-ink);font-weight:600;font-size:1rem}
+.play svg{width:1.15rem;height:1.15rem}
+.group{display:flex;flex-direction:column;gap:.35rem}
+.group > span{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.seg{display:flex;flex-wrap:wrap;gap:.35rem}
+.seg button{border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);background:var(--chip);border-radius:.5rem;padding:.4rem .7rem;font-size:.88rem;display:inline-flex;gap:.45rem;align-items:baseline}
+.seg button b{font-family:var(--mono);font-weight:500;font-size:.72rem;opacity:.75}
+.seg button[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:transparent}
+.status{font-family:var(--mono);font-size:.78rem;min-height:1.2em;opacity:.85}
+
+/* ---------- collection ---------- */
+main{max-width:68rem;margin:0 auto;padding-inline:16px;padding-block:2.5rem 4rem;display:grid;gap:1.5rem}
+.head{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap}
+.head h2{margin:0;font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1;text-transform:uppercase;letter-spacing:.01em}
+.head p{margin:.4rem 0 0;color:var(--muted);max-width:38rem}
+.btn{display:inline-flex;align-items:center;gap:.45rem;border:1px solid var(--line);background:var(--surface);border-radius:.5rem;padding:.45rem .8rem;font-size:.85rem;font-weight:500}
+.btn svg{width:.95rem;height:.95rem}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn:disabled{opacity:.55;cursor:progress}
+.grid{display:grid;gap:0;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:9rem 1fr 1fr;gap:1rem;padding-block:1rem;border-bottom:1px solid var(--line);align-items:stretch}
+.wx{display:flex;flex-direction:column;justify-content:center;gap:.1rem}
+.wx code{font-family:var(--mono);font-size:1.4rem;font-weight:500;color:var(--accent)}
+.wx span{color:var(--muted);font-size:.85rem}
+.card{min-width:0;display:grid;gap:.5rem;padding:.9rem 1rem;border-radius:.6rem;border:1px solid transparent;transition:background .2s,border-color .2s}
+.card:hover{background:var(--surface)}
+.card.on{background:var(--surface);border-color:var(--accent)}
+.card .mood{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.5rem}
+.card h3{margin:0;font-family:var(--display);font-weight:600;font-size:1.7rem;line-height:1;text-transform:uppercase}
+.card .m{font-family:var(--mono);font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.card .acts{display:flex;gap:.4rem;flex-wrap:wrap}
+.eq{display:none;gap:2px;align-items:end;height:.7rem}
+.card.on.playing .eq{display:inline-flex}
+.eq i{width:3px;background:var(--accent);animation:eq .9s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:-.3s}.eq i:nth-child(3){animation-delay:-.6s}
+@keyframes eq{0%,100%{height:30%}50%{height:100%}}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1.5rem;color:var(--muted);font-size:.9rem}
+.notes h4{margin:0 0 .3rem;color:var(--fg);font-size:.8rem;font-family:var(--mono);font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.notes p{margin:0;max-width:36rem}
+.toast{position:fixed;left:50%;bottom:calc(1rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.6rem 1rem;border-radius:.5rem;font-size:.88rem;max-width:calc(100vw - 32px);z-index:5}
+@media (max-width:640px){
+  .row{grid-template-columns:1fr 1fr;gap:.5rem}
+  .wx{grid-column:1/-1;flex-direction:row;align-items:baseline;gap:.6rem}
+  .card{padding:.7rem .6rem}
+  .card h3{font-size:1.4rem}
+}
+@media (prefers-reduced-motion:reduce){.eq i{animation:none;height:70%}}
+body{margin:0}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="hero-in">
+    <div class="top">
+      <div class="brand">Weather Beats <small>v2 · every track original, CC0</small></div>
+      <div class="live" id="live" hidden><button id="liveBtn" type="button">Use my local weather</button><span id="liveInfo"></span></div>
+    </div>
+    <div class="now">
+      <div class="eyebrow" id="eyebrow">SKC · Happy</div>
+      <h1 id="title">Glasshouse</h1>
+      <div class="meta" id="meta">C Lydian · 116 BPM · 0:50 loop</div>
+    </div>
+    <div class="controls">
+      <button class="play" id="playBtn" type="button" aria-label="Play">
+        <svg viewBox="0 0 24 24" fill="currentColor" id="playIcon"><path d="M7 4.5v15l13-7.5z"/></svg>
+        <span id="playLabel">Play</span>
+      </button>
+      <div class="group"><span>Sky</span><div class="seg" id="wxSeg"></div></div>
+      <div class="group"><span>Mood</span><div class="seg" id="moodSeg"></div></div>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<main>
+  <div class="head">
+    <div>
+      <h2>The collection</h2>
+      <p>Ten loops, one for every sky and mood. Each is composed and synthesized by this page's own code. No samples, no outside recordings, so you can use them anywhere.</p>
+    </div>
+    <button class="btn primary" id="saveAll" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>Save all 10 (.zip)</button>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="notes">
+    <div><h4>License</h4><p>Released under CC0 1.0. Use the loops in apps, videos, streams and games, commercially or not, with no credit required. Each download includes a LICENSE.txt.</p></div>
+    <div><h4>How it's made</h4><p>A seeded composer picks a mode, chord progression and motif per track, then a Web Audio synth renders pads, bass, bells, plucks, keys, drums and weather sound. Same seed, same song, every time.</p></div>
+    <div><h4>From v1</h4><p>The 2019 iOS app paired five weather states with happy and sad moods. v2 keeps that matrix and replaces the bundled MP3s with music you own outright.</p></div>
+  </div>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ================= tracks ================= */
+const WX=[{id:'sun',code:'SKC',name:'Clear'},{id:'cloud',code:'OVC',name:'Overcast'},{id:'rain',code:'RA',name:'Rain'},{id:'snow',code:'SN',name:'Snow'},{id:'storm',code:'TS',name:'Thunderstorm'}];
+const MOODS=[{id:'happy',name:'Happy'},{id:'sad',name:'Sad'}];
+const TRACKS=[
+ {w:'sun',m:'happy',title:'Glasshouse',root:60,mode:'lydian',bpm:116,bars:24,prog:[0,1,5,4],pad:'triangle',cut:2600,bass:'pulse',arp:{v:'pluck',rate:2,shape:'up'},mel:.55,melV:'bell',drums:'four',swing:0,wet:.25,seed:11,tex:{birds:1}},
+ {w:'sun',m:'sad',title:'Long Shadows',root:57,mode:'aeolian',bpm:74,bars:16,prog:[0,5,2,6],pad:'sawtooth',cut:1200,bass:'long',comp:true,mel:.42,melV:'keys',drums:'brush',swing:.1,wet:.4,seed:23,tex:{air:.5}},
+ {w:'cloud',m:'happy',title:'Overcast Bicycle',root:65,mode:'ionian',bpm:90,bars:16,prog:[1,4,0,5],sev:true,pad:'triangle',cut:1500,bass:'walk',comp:true,mel:.5,melV:'keys',drums:'lofi',swing:.22,wet:.3,seed:37,tex:{wind:.3}},
+ {w:'cloud',m:'sad',title:'Grey Lantern',root:62,mode:'dorian',bpm:66,bars:16,prog:[0,3,0,6],sev:true,pad:'sawtooth',cut:900,bass:'long',arp:{v:'bell',rate:4,shape:'updown'},mel:.3,melV:'keys',drums:'none',wet:.5,seed:41,tex:{wind:.5}},
+ {w:'rain',m:'happy',title:'Puddle Jumper',root:67,mode:'ionian',bpm:122,bars:24,prog:[0,4,5,3],pad:'triangle',cut:2200,bass:'pulse',arp:{v:'pluck',rate:1,shape:'updown'},mel:.5,melV:'bell',drums:'four',wet:.25,seed:53,tex:{rain:.5}},
+ {w:'rain',m:'sad',title:'Window Seat',root:64,mode:'aeolian',bpm:72,bars:16,prog:[0,3,5,4],sev:true,pad:'sawtooth',cut:1000,bass:'long',comp:true,mel:.45,melV:'keys',drums:'lofi',swing:.2,wet:.4,seed:67,tex:{rain:1}},
+ {w:'snow',m:'happy',title:'First Footprints',root:70,mode:'ionian',bpm:104,bars:24,prog:[0,5,3,4],pad:'triangle',cut:2000,bass:'pulse',arp:{v:'bell',rate:2,shape:'up'},mel:.45,melV:'keys',drums:'brush',wet:.45,seed:71,tex:{wind:.25}},
+ {w:'snow',m:'sad',title:'White Hours',root:61,mode:'aeolian',bpm:58,bars:12,prog:[0,4,5,3],pad:'triangle',cut:1100,bass:'long',arp:{v:'bell',rate:4,shape:'updown'},mel:.3,melV:'bell',drums:'none',wet:.6,seed:83,tex:{wind:.6}},
+ {w:'storm',m:'happy',title:'Charged Air',root:64,mode:'mixolydian',bpm:132,bars:32,prog:[0,6,3,0],pad:'sawtooth',cut:2800,bass:'pulse',arp:{v:'pluck',rate:1,shape:'up'},mel:.55,melV:'pluck',drums:'drive',wet:.2,seed:97,tex:{rain:.4,thunder:2}},
+ {w:'storm',m:'sad',title:'Under the Front',root:53,mode:'phrygian',bpm:80,bars:16,prog:[0,1,0,6],pad:'sawtooth',cut:800,bass:'long',comp:true,mel:.35,melV:'keys',drums:'half',wet:.45,seed:101,tex:{rain:.8,thunder:3,wind:.3}},
+];
+const MODES={ionian:[0,2,4,5,7,9,11],dorian:[0,2,3,5,7,9,10],phrygian:[0,1,3,5,7,8,10],lydian:[0,2,4,6,7,9,11],mixolydian:[0,2,4,5,7,9,10],aeolian:[0,2,3,5,7,8,10]};
+const NOTE=['C','C♯','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+const loopSec=t=>t.bars*4*60/t.bpm;
+const fmt=s=>Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
+const keyName=t=>NOTE[t.root%12]+' '+t.mode[0].toUpperCase()+t.mode.slice(1);
+const fileBase=t=>t.title+' - Weather Beats';
+
+/* ================= composer + synth ================= */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const hz=m=>440*Math.pow(2,(m-69)/12);
+function deg(t,d,oct=0){const s=MODES[t.mode],n=s.length,o=Math.floor(d/n),i=((d%n)+n)%n;return t.root+s[i]+12*(o+oct)}
+function chord(t,d,size){const a=[];for(let k=0;k<size;k++)a.push(deg(t,d+2*k));return a}
+const DRUMS={
+ four:{k:'x...x...x...x...',s:'....x.......x...',h:'..x...x...x...x.'},
+ lofi:{k:'x......x..x.....',s:'....x.......x...',h:'x.o.x.o.x.o.x.oo'},
+ brush:{k:'x.........o.....',b:'....x.......x...',h:'o.o.o.o.o.o.o.o.'},
+ drive:{k:'x...x...x...x.x.',s:'....X.......X...',h:'xoxoxoxoxoxoxoxo'},
+ half:{k:'x..........x....',s:'........X.......',h:'x.o.x.o.x.o.x.o.'},
+ none:{}
+};
+const VEL={x:.8,X:1,o:.4};
+
+function makeNoise(ctx){const b=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate),d=b.getChannelData(0);let s=12345;for(let i=0;i<d.length;i++){s=(s*1103515245+12345)&0x7fffffff;d[i]=s/0x3fffffff-1}return b}
+function makeImpulse(ctx,sec,rnd){const n=Math.floor(ctx.sampleRate*sec),b=ctx.createBuffer(2,n,ctx.sampleRate);for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<n;i++)d[i]=(rnd()*2-1)*Math.pow(1-i/n,3)}return b}
+function chan(ctx,bus,vol,send,pan){const g=ctx.createGain();g.gain.value=vol;let n=g;if(pan){const p=ctx.createStereoPanner();p.pan.value=pan;g.connect(p);n=p}n.connect(bus.dry);if(send){const s=ctx.createGain();s.gain.value=send;n.connect(s);s.connect(bus.send)}return g}
+function ns(ctx,noise,t,dur){const s=ctx.createBufferSource();s.buffer=noise;s.loop=true;s.start(t,(t*7.31)%1.5);s.stop(t+dur);return s}
+
+const V={
+ pad(ctx,out,t,dur,notes,type,cut){
+  const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=cut;f.Q.value=.5;
+  const g=ctx.createGain();const a=Math.min(1.2,dur*.4);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.11,t+a);g.gain.setValueAtTime(.11,t+dur);g.gain.linearRampToValueAtTime(0,t+dur+1);
+  f.connect(g);g.connect(out);
+  for(const m of notes)for(const det of[-7,7]){const o=ctx.createOscillator();o.type=type;o.frequency.value=hz(m);o.detune.value=det;o.connect(f);o.start(t);o.stop(t+dur+1.05)}
+ },
+ bass(ctx,out,t,dur,m,vel=1){
+  const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=650;
+  const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.5*vel,t+.012);g.gain.setTargetAtTime(.32*vel,t+.02,.15);g.gain.setValueAtTime(.32*vel,t+Math.max(.03,dur-.06));g.gain.linearRampToValueAtTime(0,t+dur);
+  f.connect(g);g.connect(out);
+  const a=ctx.createOscillator();a.type='triangle';a.frequency.value=hz(m);a.connect(f);
+  const b=ctx.createOscillator();b.type='sine';b.frequency.value=hz(m);b.connect(g);
+  for(const o of[a,b]){o.start(t);o.stop(t+dur+.02)}
+ },
+ pluck(ctx,out,t,m,vel){
+  const o=ctx.createOscillator();o.type='sawtooth';o.frequency.value=hz(m);
+  const f=ctx.createBiquadFilter();f.type='lowpass';f.Q.value=2;f.frequency.setValueAtTime(400+3600*vel,t);f.frequency.exponentialRampToValueAtTime(420,t+.25);
+  const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.22*vel,t+.004);g.gain.exponentialRampToValueAtTime(.001,t+.5);
+  o.connect(f).connect(g).connect(out);o.start(t);o.stop(t+.52);
+ },
+ bell(ctx,out,t,m,vel){
+  const f0=hz(m);const c=ctx.createOscillator();c.frequency.value=f0;
+  const md=ctx.createOscillator();md.frequency.value=f0*3.5;const mg=ctx.createGain();mg.gain.setValueAtTime(f0*1.6,t);mg.gain.exponentialRampToValueAtTime(1,t+1.4);
+  md.connect(mg).connect(c.frequency);
+  const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.2*vel,t+.004);g.gain.exponentialRampToValueAtTime(.001,t+2.4);
+  c.connect(g).connect(out);for(const o of[c,md]){o.start(t);o.stop(t+2.45)}
+ },
+ keys(ctx,out,t,m,vel,dur=1.5){
+  const end=t+Math.min(dur+.35,2.6);
+  const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.24*vel,t+.006);g.gain.exponentialRampToValueAtTime(.06*vel,t+Math.min(dur,1.2)+.01);g.gain.exponentialRampToValueAtTime(.001,end);
+  const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=2400;f.connect(g);g.connect(out);
+  const a=ctx.createOscillator();a.type='sine';a.frequency.value=hz(m);a.connect(f);
+  const b=ctx.createOscillator();b.type='sine';b.frequency.value=hz(m)*2;const bg=ctx.createGain();bg.gain.setValueAtTime(.35,t);bg.gain.exponentialRampToValueAtTime(.02,t+.4);b.connect(bg).connect(f);
+  for(const o of[a,b]){o.start(t);o.stop(end+.02)}
+ },
+ kick(ctx,out,t,v){
+  const o=ctx.createOscillator();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(44,t+.12);
+  const g=ctx.createGain();g.gain.setValueAtTime(.9*v,t);g.gain.exponentialRampToValueAtTime(.001,t+.38);o.connect(g).connect(out);o.start(t);o.stop(t+.4);
+ },
+ snare(ctx,out,noise,t,v){
+  const s=ns(ctx,noise,t,.22);const f=ctx.createBiquadFilter();f.type='highpass';f.frequency.value=1400;
+  const g=ctx.createGain();g.gain.setValueAtTime(.42*v,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);s.connect(f).connect(g).connect(out);
+  const o=ctx.createOscillator();o.type='triangle';o.frequency.value=190;const og=ctx.createGain();og.gain.setValueAtTime(.3*v,t);og.gain.exponentialRampToValueAtTime(.001,t+.1);o.connect(og).connect(out);o.start(t);o.stop(t+.12);
+ },
+ brush(ctx,out,noise,t,v){
+  const s=ns(ctx,noise,t,.3);const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=3200;f.Q.value=.7;
+  const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.16*v,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+.28);s.connect(f).connect(g).connect(out);
+ },
+ hat(ctx,out,noise,t,v){
+  const s=ns(ctx,noise,t,.06);const f=ctx.createBiquadFilter();f.type='highpass';f.frequency.value=7500;
+  const g=ctx.createGain();g.gain.setValueAtTime(.14*v,t);g.gain.exponentialRampToValueAtTime(.001,t+.05);s.connect(f).connect(g).connect(out);
+ }
+};
+
+function makeMotif(rnd,density){
+  let notes=[];let off=Math.floor(rnd()*3)*2;
+  for(let s=0;s<32;s+=2){const strong=s%8===0;if(rnd()<density*(strong?1.35:.75)){
+    off=Math.max(-1,Math.min(8,off+Math.round((rnd()-.5)*4)));
+    if(strong&&rnd()<.6)off=[0,2,4,7][Math.floor(rnd()*4)];
+    notes.push({s,off,v:.6+rnd()*.4})}}
+  if(notes.length<3)notes=[{s:0,off:4,v:.9},{s:6,off:2,v:.7},{s:16,off:0,v:.85}];
+  notes.forEach((n,i)=>{const nx=i<notes.length-1?notes[i+1].s:32;n.d=Math.min(8,nx-n.s)});
+  return notes;
+}
+
+function compose(ctx,t){
+  const rnd=mulberry32(t.seed);
+  const beat=60/t.bpm,bar=beat*4,step=beat/4,loop=t.bars*bar;
+  const noise=makeNoise(ctx);
+  const master=ctx.createGain();master.gain.value=.7;
+  const comp=ctx.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=4;comp.attack.value=.005;comp.release.value=.2;
+  master.connect(comp);comp.connect(ctx.destination);
+  const verb=ctx.createConvolver();verb.buffer=makeImpulse(ctx,2.8,rnd);const wet=ctx.createGain();wet.gain.value=1;verb.connect(wet);wet.connect(master);
+  const bus={dry:master,send:verb};
+  const ch={pad:chan(ctx,bus,.55,t.wet*1.4),bass:chan(ctx,bus,.75,0),arp:chan(ctx,bus,.4,t.wet*1.6,-.25),mel:chan(ctx,bus,.5,t.wet*1.3,.18),comp:chan(ctx,bus,.4,t.wet,-.1),drum:chan(ctx,bus,.75,t.wet*.4),tex:chan(ctx,bus,.6,t.wet*.6)};
+  const motif=makeMotif(rnd,t.mel);
+  const compPat=['x.....x...x.....','x.......x.....x.','..x...x...x...x.'][Math.floor(rnd()*3)];
+  const dk=DRUMS[t.drums]||{};
+  const intro=Math.min(4,Math.floor(t.bars/4)),outroAt=t.bars-2;
+  const ts=(b,s)=>b*bar+s*step+(s%2?(t.swing||0)*step:0);
+
+  for(let b=0;b<t.bars;b++){
+    const d=t.prog[b%t.prog.length],tb=b*bar;
+    const sec=b<intro?'intro':b>=outroAt?'outro':'main';
+    const cn=chord(t,d,t.sev?4:3);
+    V.pad(ctx,ch.pad,tb,bar,cn,t.pad,t.cut);
+    // bass
+    const br=deg(t,d,-2);
+    if(sec==='intro'&&b<intro/2){} else if(t.bass==='long'||sec!=='main'){V.bass(ctx,ch.bass,tb,bar*.98,br,.9)}
+    else if(t.bass==='pulse'){for(let s=0;s<16;s+=2)V.bass(ctx,ch.bass,ts(b,s),step*1.7,br+(s===14&&b%2?12:0),s%4?.7:1)}
+    else if(t.bass==='walk'){const nd=deg(t,t.prog[(b+1)%t.prog.length],-2);const w=[br,br+12,deg(t,d+4,-2),nd+(rnd()<.5?1:-1)];w.forEach((m,i)=>V.bass(ctx,ch.bass,ts(b,i*4),beat*.9,m,i?.8:1))}
+    // arp
+    if(t.arp){const tones=[...chord(t,d,3),deg(t,d,1)].map(m=>m+12);const seq=t.arp.shape==='updown'?[0,1,2,3,2,1]:[0,1,2,3];let k=b*7;
+      for(let s=0;s<16;s+=t.arp.rate){const m=tones[seq[k++%seq.length]];const v=(sec==='main'?.75:.5)*(s%4?.75:1);(t.arp.v==='bell'?V.bell:V.pluck)(ctx,ch.arp,ts(b,s),m,v)}}
+    // comp keys
+    if(t.comp&&sec!=='intro'){for(let s=0;s<16;s++)if(compPat[s]==='x')for(const m of cn)V.keys(ctx,ch.comp,ts(b,s),m,.38,step*3)}
+    // melody
+    if(sec==='main'){const half=(b%2)*16;for(const n of motif){if(n.s<half||n.s>=half+16)continue;
+      let off=n.off;if(b>=t.bars/2&&n===motif[motif.length-1])off+=1;
+      const m=deg(t,d+off,1),at=ts(b,n.s-half);
+      if(t.melV==='keys')V.keys(ctx,ch.mel,at,m,n.v,n.d*step);else if(t.melV==='bell')V.bell(ctx,ch.mel,at,m,n.v);else V.pluck(ctx,ch.mel,at,m,n.v)}}
+    // drums
+    for(let s=0;s<16;s++){const at=ts(b,s);
+      if(dk.h&&dk.h[s]!=='.')V.hat(ctx,ch.drum,noise,at,VEL[dk.h[s]]*(sec==='main'?1:.6));
+      if(sec!=='main')continue;
+      if(dk.k&&dk.k[s]!=='.')V.kick(ctx,ch.drum,at,VEL[dk.k[s]]);
+      if(dk.s&&dk.s[s]!=='.')V.snare(ctx,ch.drum,noise,at,VEL[dk.s[s]]);
+      if(dk.b&&dk.b[s]!=='.')V.brush(ctx,ch.drum,noise,at,VEL[dk.b[s]]);}
+  }
+
+  // weather sound
+  const x=t.tex||{};
+  if(x.rain){const s=ns(ctx,noise,0,loop);const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=1100;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=6500;const g=ctx.createGain();g.gain.value=.09*x.rain;s.connect(hp).connect(lp).connect(g).connect(ch.tex);
+    const drops=Math.floor(loop*6*x.rain);for(let i=0;i<drops;i++){const at=rnd()*(loop-.1),d=ns(ctx,noise,at,.03),f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=2500+rnd()*4000;f.Q.value=8;const dg=ctx.createGain();dg.gain.setValueAtTime(.25*rnd(),at);dg.gain.exponentialRampToValueAtTime(.001,at+.025);d.connect(f).connect(dg).connect(ch.tex)}}
+  if(x.wind||x.air){const amt=x.wind||x.air;const s=ns(ctx,noise,0,loop);const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=x.wind?600:300;f.Q.value=x.wind?1.6:.6;
+    const lfo=ctx.createOscillator();lfo.frequency.value=1/(loop/2);const lg=ctx.createGain();lg.gain.value=x.wind?350:120;lfo.connect(lg).connect(f.frequency);lfo.start(0);lfo.stop(loop);
+    const g=ctx.createGain();g.gain.value=.12*amt;s.connect(f).connect(g).connect(ch.tex)}
+  if(x.thunder){for(let i=0;i<x.thunder;i++){const at=2+(loop-11)*(i+rnd()*.8)/x.thunder;const s=ns(ctx,noise,at,7);const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.setValueAtTime(900,at);f.frequency.exponentialRampToValueAtTime(140,at+1.5);
+    const g=ctx.createGain();g.gain.setValueAtTime(0,at);g.gain.linearRampToValueAtTime(1.1,at+.06);g.gain.setTargetAtTime(.35,at+.1,.4);g.gain.setTargetAtTime(0,at+1.8,1.2);s.connect(f).connect(g).connect(ch.tex)}}
+  if(x.birds){let at=1.5;while(at<loop-2){const n=2+Math.floor(rnd()*3),base=2600+rnd()*1200,p=ctx.createStereoPanner();p.pan.value=rnd()*1.4-.7;p.connect(ch.tex);
+    for(let k=0;k<n;k++){const st=at+k*.13,o=ctx.createOscillator();o.frequency.setValueAtTime(base,st);o.frequency.exponentialRampToValueAtTime(base*1.5,st+.045);o.frequency.exponentialRampToValueAtTime(base*1.1,st+.09);
+      const g=ctx.createGain();g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(.05,st+.015);g.gain.linearRampToValueAtTime(0,st+.1);o.connect(g).connect(p);o.start(st);o.stop(st+.11)}
+    at+=3+rnd()*4}}
+  return loop;
+}
+
+const SR=44100,TAIL=4;
+async function renderTrack(t){
+  const loop=loopSec(t);
+  const ctx=new OfflineAudioContext(2,Math.ceil((loop+TAIL)*SR),SR);
+  compose(ctx,t);
+  const buf=await ctx.startRendering();
+  const n=Math.round(loop*SR),chs=[];let peak=1e-6;
+  for(let c=0;c<2;c++){const d=buf.getChannelData(c),o=new Float32Array(n);o.set(d.subarray(0,n));for(let i=n;i<d.length;i++)o[i-n]+=d[i];for(let i=0;i<n;i++){const a=Math.abs(o[i]);if(a>peak)peak=a}chs.push(o)}
+  const k=.89/peak;for(const o of chs)for(let i=0;i<n;i++)o[i]*=k;
+  return{chs,n,sr:SR};
+}
+const cache=new Map();
+function getTrack(t){if(!cache.has(t))cache.set(t,renderTrack(t));return cache.get(t)}
+
+/* ================= files ================= */
+function wav({chs,n,sr}){const buf=new ArrayBuffer(44+n*4),v=new DataView(buf);const w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+n*4,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,2,true);v.setUint32(24,sr,true);v.setUint32(28,sr*4,true);v.setUint16(32,4,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*4,true);
+  let o=44;const[l,r]=chs;for(let i=0;i<n;i++){v.setInt16(o,Math.max(-1,Math.min(1,l[i]))*32767,true);v.setInt16(o+2,Math.max(-1,Math.min(1,r[i]))*32767,true);o+=4}return new Uint8Array(buf)}
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+function zip(files){const enc=new TextEncoder(),parts=[],cd=[];let off=0;
+  for(const f of files){const name=enc.encode(f.name),data=typeof f.data==='string'?enc.encode(f.data):f.data,crc=crc32(data);
+    const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(12,0x21,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,name.length,true);
+    parts.push(h.buffer,name,data);
+    const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(14,0x21,true);c.setUint32(16,crc,true);c.setUint32(20,data.length,true);c.setUint32(24,data.length,true);c.setUint16(28,name.length,true);c.setUint32(42,off,true);
+    cd.push(c.buffer,name);off+=30+name.length+data.length}
+  const cdSize=cd.reduce((a,p)=>a+(p.byteLength??p.length),0);
+  const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cdSize,true);e.setUint32(16,off,true);
+  return new Blob([...parts,...cd,e.buffer],{type:'application/zip'})}
+function license(list){return `Weather Beats v2 loops
+${list.map(t=>`- ${t.title} (${WX.find(w=>w.id===t.w).name}, ${t.m}) · ${keyName(t)} · ${t.bpm} BPM · ${fmt(loopSec(t))} seamless loop`).join('\n')}
+
+These recordings were composed and synthesized by the Weather Beats page's own code. They contain no samples or third-party recordings.
+
+License: CC0 1.0 Universal (public domain dedication).
+https://creativecommons.org/publicdomain/zero/1.0/
+You may copy, modify, distribute and perform the work, even for commercial purposes, without asking permission or giving credit.
+
+Format: 16-bit PCM WAV, 44.1 kHz stereo. Each file loops seamlessly end to start.
+`}
+let dlNs;
+async function saveBlob(filename,blob){
+  if(window.claude&&typeof window.claude.use==='function'){
+    if(dlNs===undefined)dlNs=await window.claude.use('downloads');
+    if(!dlNs){toast("Saving files isn't available in this view.");return}
+    try{await dlNs.save({filename,data:blob});toast('Saved '+filename)}
+    catch(e){if(e&&e.code==='declined')return;if(e&&e.code==='rate_limited'){toast('A save prompt is already open.');return}toast("That file couldn't be saved here.")}
+    return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+
+/* ================= playback ================= */
+let actx,outGain,analyser,src,srcGain,playing=false,current=TRACKS[0],playToken=0;
+function ensureCtx(){if(actx)return;actx=new (window.AudioContext||window.webkitAudioContext)();outGain=actx.createGain();analyser=actx.createAnalyser();analyser.fftSize=1024;outGain.connect(analyser);analyser.connect(actx.destination)}
+function toBuffer(r){const b=actx.createBuffer(2,r.n,r.sr);b.copyToChannel(r.chs[0],0);b.copyToChannel(r.chs[1],1);return b}
+async function start(t){
+  ensureCtx();if(actx.state==='suspended')await actx.resume();
+  const tok=++playToken;
+  if(!cache.has(t))status('Composing '+t.title+'…');
+  const r=await getTrack(t);if(tok!==playToken)return;
+  stopSrc(.8);
+  const s=actx.createBufferSource();s.buffer=r.buf||(r.buf=toBuffer(r));s.loop=true;
+  const g=actx.createGain();const now=actx.currentTime;g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(1,now+.8);
+  s.connect(g).connect(outGain);s.start();src=s;srcGain=g;playing=true;status('');syncUI();
+}
+function stopSrc(fade){if(!src)return;const s=src,g=srcGain,now=actx.currentTime;g.gain.cancelScheduledValues(now);g.gain.setValueAtTime(g.gain.value,now);g.gain.linearRampToValueAtTime(0,now+fade);s.stop(now+fade+.05);src=null}
+function stop(){playToken++;stopSrc(.5);playing=false;syncUI()}
+
+/* ================= sky ================= */
+const PAL={
+ 'sun-happy':{top:'#2f7fd0',bot:'#ffd79e',ridge:'#1d4f70',light:false,sun:{x:.78,y:.26,r:.07,c:'#fff2c4'}},
+ 'sun-sad':{top:'#6b5b7a',bot:'#f2b98f',ridge:'#3a2f40',light:false,sun:{x:.25,y:.66,r:.11,c:'#ffb36b'}},
+ 'cloud-happy':{top:'#8fb0cb',bot:'#e6ecf1',ridge:'#5d7486',light:true,clouds:6,cc:'255,255,255'},
+ 'cloud-sad':{top:'#55606c',bot:'#98a2ac',ridge:'#2f363e',light:false,clouds:8,cc:'205,212,220'},
+ 'rain-happy':{top:'#6a8ca8',bot:'#c7d6e0',ridge:'#3e566a',light:true,clouds:5,cc:'235,240,245',rain:140},
+ 'rain-sad':{top:'#27323e',bot:'#56636f',ridge:'#161c23',light:false,clouds:7,cc:'120,132,145',rain:320},
+ 'snow-happy':{top:'#a9c8e6',bot:'#f4f7fb',ridge:'#e8eef5',light:true,clouds:3,cc:'255,255,255',snow:140},
+ 'snow-sad':{top:'#465166',bot:'#a5aebd',ridge:'#d5dbe4',light:false,clouds:6,cc:'170,180,195',snow:240},
+ 'storm-happy':{top:'#262a49',bot:'#7a5f99',ridge:'#15162a',light:false,clouds:6,cc:'110,100,150',rain:200,bolt:true},
+ 'storm-sad':{top:'#101318',bot:'#3a404b',ridge:'#06080a',light:false,clouds:8,cc:'70,78,90',rain:380,bolt:true},
+};
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,dpr=1,parts=[],cloudsArr=[],flash=0,nextFlash=0,wave=new Float32Array(1024),smooth=new Float32Array(160);
+function resize(){const r=cv.getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);seedSky()}
+function seedSky(){const p=PAL[current.w+'-'+current.m];parts=[];
+  const n=p.rain||p.snow||0;const scale=Math.max(.4,W/1200);
+  for(let i=0;i<n*scale;i++)parts.push({x:Math.random()*W,y:Math.random()*H,v:p.rain?(9+Math.random()*7):(.4+Math.random()*1),r:p.snow?(1+Math.random()*2.4):0,l:8+Math.random()*12,ph:Math.random()*6.28});
+  cloudsArr=[];for(let i=0;i<(p.clouds||0);i++)cloudsArr.push({x:Math.random()*W*1.3-W*.15,y:H*(.06+Math.random()*.38),s:.6+Math.random()*1.1,v:.08+Math.random()*.2});
+}
+function drawCloud(c,col,a){const s=c.s*Math.max(90,W*.09);for(const [dx,dy,r] of [[0,0,1],[.8,.15,.75],[-.8,.2,.7],[.35,-.35,.7],[-.35,-.25,.6]]){const g=cx.createRadialGradient(c.x+dx*s,c.y+dy*s,0,c.x+dx*s,c.y+dy*s,r*s);g.addColorStop(0,`rgba(${col},${a})`);g.addColorStop(1,`rgba(${col},0)`);cx.fillStyle=g;cx.beginPath();cx.arc(c.x+dx*s,c.y+dy*s,r*s,0,6.29);cx.fill()}}
+function frame(ts){
+  const p=PAL[current.w+'-'+current.m],sp=reduce?.15:1;
+  const g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,p.top);g.addColorStop(1,p.bot);cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  if(p.sun){const s=p.sun,r=s.r*Math.max(W,H),x=s.x*W,y=s.y*H;const gl=cx.createRadialGradient(x,y,r*.6,x,y,r*4.5);gl.addColorStop(0,s.c+'cc');gl.addColorStop(1,s.c+'00');cx.fillStyle=gl;cx.fillRect(0,0,W,H);cx.fillStyle=s.c;cx.beginPath();cx.arc(x,y,r,0,6.29);cx.fill()}
+  for(const c of cloudsArr){c.x+=c.v*sp;if(c.x>W*1.2)c.x=-W*.2;drawCloud(c,p.cc,.55)}
+  if(p.rain){cx.strokeStyle=p.light?'rgba(40,60,80,.35)':'rgba(220,230,240,.38)';cx.lineWidth=1;cx.beginPath();for(const d of parts){d.y+=d.v*sp;d.x+=d.v*.18*sp;if(d.y>H){d.y=-20;d.x=Math.random()*W}cx.moveTo(d.x,d.y);cx.lineTo(d.x-d.l*.18,d.y-d.l)}cx.stroke()}
+  if(p.snow){cx.fillStyle='rgba(255,255,255,.85)';for(const f of parts){f.y+=f.v*sp;f.ph+=.01*sp;f.x+=Math.sin(f.ph)*.4*sp;if(f.y>H){f.y=-5;f.x=Math.random()*W}cx.beginPath();cx.arc(f.x,f.y,f.r,0,6.29);cx.fill()}}
+  if(p.bolt&&!reduce){if(ts>nextFlash){flash=1;nextFlash=ts+5000+Math.random()*9000}if(flash>0){cx.fillStyle=`rgba(230,235,255,${flash*.35})`;cx.fillRect(0,0,W,H);flash*=.86;if(flash<.02)flash=0}}
+  // horizon = waveform
+  const N=smooth.length;let live=false;
+  if(playing&&analyser){analyser.getFloatTimeDomainData(wave);live=true}
+  for(let i=0;i<N;i++){let v;if(live){let a=0;const j0=Math.floor(i*wave.length/N),j1=Math.floor((i+1)*wave.length/N);for(let j=j0;j<j1;j++)a=Math.max(a,Math.abs(wave[j]));v=a}else v=0;smooth[i]+=(v-smooth[i])*.25}
+  const base=H-70;cx.fillStyle=p.ridge;cx.beginPath();cx.moveTo(0,H);
+  for(let i=0;i<=N;i++){const x=i/N*W,k=Math.min(i,N-1);const hill=Math.sin(i*.07)*14+Math.sin(i*.023+1.3)*22;cx.lineTo(x,base-hill-smooth[k]*90)}
+  cx.lineTo(W,H);cx.closePath();cx.fill();
+  requestAnimationFrame(frame);
+}
+
+/* ================= UI ================= */
+const $=id=>document.getElementById(id);
+function status(s){$('status').textContent=s}
+let toastT;function toast(s){const el=$('toast');el.textContent=s;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3200)}
+const find=(w,m)=>TRACKS.find(t=>t.w===w&&t.m===m);
+const ICON={play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>',pause:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>',save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>'};
+
+function buildUI(){
+  $('wxSeg').innerHTML=WX.map(w=>`<button type="button" data-w="${w.id}" aria-pressed="false"><b>${w.code}</b>${w.name}</button>`).join('');
+  $('moodSeg').innerHTML=MOODS.map(m=>`<button type="button" data-m="${m.id}" aria-pressed="false">${m.name}</button>`).join('');
+  $('grid').innerHTML=WX.map(w=>`<div class="row"><div class="wx"><code>${w.code}</code><span>${w.name}</span></div>${MOODS.map(m=>{const t=find(w.id,m.id),i=TRACKS.indexOf(t);return `<div class="card" data-i="${i}"><div class="mood">${m.name}<span class="eq"><i></i><i></i><i></i></span></div><h3>${t.title}</h3><div class="m">${keyName(t)} · ${t.bpm} BPM · ${fmt(loopSec(t))}</div><div class="acts"><button class="btn" type="button" data-play="${i}">${ICON.play}<span>Play</span></button><button class="btn" type="button" data-save="${i}">${ICON.save}WAV</button></div></div>`}).join('')}</div>`).join('');
+  $('wxSeg').onclick=e=>{const b=e.target.closest('button');if(b)select(find(b.dataset.w,current.m))};
+  $('moodSeg').onclick=e=>{const b=e.target.closest('button');if(b)select(find(current.w,b.dataset.m))};
+  $('playBtn').onclick=()=>playing?stop():start(current);
+  $('grid').onclick=async e=>{const pb=e.target.closest('[data-play]'),sb=e.target.closest('[data-save]');
+    if(pb){const t=TRACKS[+pb.dataset.play];if(t===current&&playing)stop();else{select(t,false);start(t)}}
+    if(sb){const t=TRACKS[+sb.dataset.save];sb.disabled=true;status('Rendering '+t.title+' to WAV…');try{const r=await getTrack(t);await saveBlob(fileBase(t)+'.zip',zip([{name:fileBase(t)+'.wav',data:wav(r)},{name:'LICENSE.txt',data:license([t])}]))}finally{sb.disabled=false;status('')}}};
+  $('saveAll').onclick=async()=>{const b=$('saveAll');b.disabled=true;try{const files=[];for(let i=0;i<TRACKS.length;i++){const t=TRACKS[i];status(`Rendering ${i+1} of ${TRACKS.length}: ${t.title}…`);files.push({name:fileBase(t)+'.wav',data:wav(await getTrack(t))})}files.push({name:'LICENSE.txt',data:license(TRACKS)});status('Packing zip…');await saveBlob('Weather Beats - collection.zip',zip(files))}finally{b.disabled=false;status('')}};
+}
+function select(t,autoplay=true){const changed=t!==current;current=t;seedSky();syncUI();if(changed&&playing&&autoplay)start(t);else if(changed)getTrack(t)}
+function syncUI(){
+  const t=current,w=WX.find(x=>x.id===t.w),p=PAL[t.w+'-'+t.m];
+  $('hero').classList.toggle('light',p.light);
+  $('eyebrow').textContent=`${w.code} · ${w.name} · ${t.m==='happy'?'Happy':'Sad'}`;
+  $('title').textContent=t.title;$('meta').textContent=`${keyName(t)} · ${t.bpm} BPM · ${fmt(loopSec(t))} loop`;
+  document.querySelectorAll('#wxSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.w===t.w));
+  document.querySelectorAll('#moodSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===t.m));
+  $('playBtn').querySelector('svg').outerHTML=playing?ICON.pause:ICON.play;$('playLabel').textContent=playing?'Pause':'Play';$('playBtn').setAttribute('aria-label',playing?'Pause':'Play');
+  document.querySelectorAll('.card').forEach(c=>{const i=+c.dataset.i,on=TRACKS[i]===t;c.classList.toggle('on',on);c.classList.toggle('playing',on&&playing);
+    const pb=c.querySelector('[data-play]');const isP=on&&playing;pb.innerHTML=(isP?ICON.pause:ICON.play)+`<span>${isP?'Pause':'Play'}</span>`});
+}
+
+/* live weather, when the host allows network access (Open-Meteo, no key) */
+const OM='https://api.open-meteo.com/v1/forecast';
+function codeToWx(c){if(c<=1)return'sun';if(c<=3||c===45||c===48)return'cloud';if(c>=95)return'storm';if((c>=71&&c<=77)||c===85||c===86)return'snow';return'rain'}
+async function probeLive(){try{const ac=new AbortController();setTimeout(()=>ac.abort(),4000);const r=await fetch(OM+'?latitude=0&longitude=0&current=weather_code',{signal:ac.signal});if(r.ok&&navigator.geolocation)$('live').hidden=false}catch(e){}}
+$('liveBtn').onclick=()=>{$('liveInfo').textContent='Locating…';navigator.geolocation.getCurrentPosition(async pos=>{try{const f=/^en-US/.test(navigator.language);
+  const r=await fetch(`${OM}?latitude=${pos.coords.latitude.toFixed(2)}&longitude=${pos.coords.longitude.toFixed(2)}&current=weather_code,temperature_2m${f?'&temperature_unit=fahrenheit':''}`);const j=await r.json();
+  const w=codeToWx(j.current.weather_code);$('liveInfo').textContent=`Outside: ${WX.find(x=>x.id===w).name}, ${Math.round(j.current.temperature_2m)}°${f?'F':'C'}`;select(find(w,current.m))}catch(e){$('liveInfo').textContent="Couldn't load the weather. Pick a sky instead."}},()=>{$('liveInfo').textContent='Location is off. Pick a sky instead.'},{timeout:10000})};
+
+buildUI();syncUI();resize();addEventListener('resize',resize);requestAnimationFrame(frame);probeLive();
+setTimeout(()=>getTrack(current),300);
+</script>
+</body>
+</html>
